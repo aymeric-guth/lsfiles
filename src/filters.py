@@ -7,7 +7,7 @@ import re
 from ._types import Wrapper
 
 
-def _f_ext(
+def _ext(
     extensions: set[str]
 ) -> Callable[[pathlib.Path], Optional[pathlib.Path]]:
     @Wrapper
@@ -16,7 +16,7 @@ def _f_ext(
     return inner
 
 
-def _f_name(
+def _name(
     name: str
 ) -> Callable[[pathlib.Path], Optional[pathlib.Path]]:
     @Wrapper
@@ -26,12 +26,12 @@ def _f_name(
 
 
 @Wrapper
-def _f_dotfiles(file: pathlib.Path) ->  Optional[pathlib.Path]:
+def _dotfiles(file: pathlib.Path) ->  Optional[pathlib.Path]:
     return file if file.name[0] != '.' else None
 
 
-def _f_regex(
-    pattern: str | re.Pattern
+def _regex(
+    pattern: str
 ) -> Callable[[pathlib.Path], Optional[pathlib.Path]]:
     pat = re.compile(pattern) if isinstance(pattern, str) else pattern
     @Wrapper
@@ -45,7 +45,7 @@ def _f_regex(
 # f_dotfiles = Wrapper(_f_dotfiles)
 # f_regex = Wrapper(_f_regex)
 
-f_ext = _f_ext
-f_name = _f_name
-f_dotfiles = _f_dotfiles
-f_regex = _f_regex
+ext = _ext
+name = _name
+dotfiles = _dotfiles
+regex = _regex
