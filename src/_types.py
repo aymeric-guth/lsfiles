@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import TypeVar, Callable, Any
 
 
-T = TypeVar('T', bound='Wrapper')
+# T = TypeVar('T', bound='Wrapper')
+T = TypeVar('T')
 
 
 class Maybe(object):
