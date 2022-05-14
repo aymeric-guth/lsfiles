@@ -1,9 +1,36 @@
 from __future__ import annotations
-from typing import TypeVar, Callable, Any
+from typing import Callable, Any, Union
+import os
+import pathlib
 
 
-# T = TypeVar('T', bound='Wrapper')
-T = TypeVar('T')
+class EntryWrapper:
+    __slots__ = "entry",
+
+    def __init__(self, entry: os.DirEntry):
+        self.entry = entry
+
+    def __getattr__(self, attr: str) -> Any:
+        return getattr(self.entry, attr)
+
+    def __repr__(self) -> str:
+        name = type(self).__name__
+        return f"{name}<{self.entry}>"
+
+    def inode(self) -> int:
+        return self.entry.inode()
+
+    def is_dir(self, *, follow_symlinks: bool = True) -> bool:
+        return self.entry.is_dir(follow_symlinks=follow_symlinks)
+
+    def is_file(self, *, follow_symlinks: bool = True) -> bool:
+        return self.entry.is_file(follow_symlinks=follow_symlinks)
+
+    def is_symlink(self) -> bool:
+        return self.entry.is_symlink()
+
+    def stat(self, *, follow_symlinks: bool=True) -> os.stat_result:
+        return self.entry.stat(follow_symlinks=follow_symlinks)
 
 
 class Maybe(object):
@@ -191,4 +218,11 @@ class Wrapper:
 #     def from_str(cls, p: str):
 #         ...
 
-
+InPath = Union[pathlib.Path, pathlib.PurePath, os.DirEntry, str, None]
+PathGeneric = Union[
+    pathlib.Path,
+    pathlib.PurePath,
+    os.DirEntry,
+    str,
+    tuple[str, str, str]
+]

@@ -1,37 +1,37 @@
-from typing import Optional, Callable
+from typing import Optional, Callable, Generic
 import os
 import os.path
-import pathlib
 import re
 
-from ._types import Wrapper, T
+from ._types import EntryWrapper
 
 
 def _ext(
     extensions: set[str]
-) -> Callable[[pathlib.Path], Optional[pathlib.Path]]:
-    def inner(file: pathlib.Path) ->  Optional[pathlib.Path]:
-        return file if file.suffix.lower() in extensions else None
+) -> Callable[[EntryWrapper], Optional[EntryWrapper]]:
+    def inner(file: EntryWrapper) ->  Optional[EntryWrapper]:
+        _, ext = os.path.splitext(file.name)
+        return file if ext.lower() in extensions else None
     return inner
 
 
 def _name(
     name: str
-) -> Callable[[pathlib.Path], Optional[pathlib.Path]]:
-    def inner(file: pathlib.Path) ->  Optional[pathlib.Path]:
+) -> Callable[[EntryWrapper], Optional[EntryWrapper]]:
+    def inner(file: EntryWrapper) ->  Optional[EntryWrapper]:
         return file if name in file.name else None
     return inner
 
 
-def _dotfiles(file: pathlib.Path) ->  Optional[pathlib.Path]:
+def _dotfiles(file: EntryWrapper) ->  Optional[EntryWrapper]:
     return file if file.name[0] != '.' else None
 
 
 def _regex(
     pattern: str
-) -> Callable[[pathlib.Path], Optional[pathlib.Path]]:
+) -> Callable[[EntryWrapper], Optional[EntryWrapper]]:
     pat = re.compile(pattern) if isinstance(pattern, str) else pattern
-    def inner(file: pathlib.Path) -> Optional[pathlib.Path]:
+    def inner(file: EntryWrapper) -> Optional[EntryWrapper]:
         return file if pat.search(file.name) else None
     return inner
 
