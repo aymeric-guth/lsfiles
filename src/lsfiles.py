@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Optional
+from typing import Callable, Optional, Any
 import pathlib
 import os
 from functools import wraps
@@ -12,9 +12,9 @@ def handle_os_exceptions(
     func: Callable[[pathlib.Path], list[pathlib.Path]]
 ) -> Callable[[pathlib.Path], list[pathlib.Path]]:
     @wraps(func)
-    def inner(path: pathlib.Path) -> list[pathlib.Path]:
+    def inner(*args, **kwargs) -> Any:
         try:
-            return func(path)
+            return func(*args, **kwargs)
         except (PermissionError, OSError):
             ...
     return inner
