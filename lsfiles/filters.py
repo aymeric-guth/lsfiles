@@ -28,11 +28,20 @@ def _dotfiles(file: EntryWrapper) ->  Optional[EntryWrapper]:
 
 
 def _regex(
-    pattern: str
+    pattern: str | re.Pattern
 ) -> Callable[[EntryWrapper], Optional[EntryWrapper]]:
     pat = re.compile(pattern) if isinstance(pattern, str) else pattern
     def inner(file: EntryWrapper) -> Optional[EntryWrapper]:
         return file if pat.search(file.name) else None
+    return inner
+
+
+def _exclude_path(
+    pattern: str | re.Pattern
+) -> Callable[[EntryWrapper], Optional[EntryWrapper]]:
+    pat = re.compile(pattern) if isinstance(pattern, str) else pattern
+    def inner(file: EntryWrapper) -> Optional[EntryWrapper]:
+        return None if pat.search(file.path) else file
     return inner
 
 
@@ -45,3 +54,4 @@ ext = _ext
 name = _name
 dotfiles = _dotfiles
 regex = _regex
+exclude_path = _exclude_path
