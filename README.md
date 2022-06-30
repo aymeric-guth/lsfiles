@@ -17,7 +17,7 @@ from lsfiles import filters as f
 from lsfiles import adapters as a
 
 
-root = pathlib.PurePath(os.getenv('HOME')) / 'Desktop' / 'dev'
+root = pathlib.PurePath(os.getenv('HOME'))
 
 filters = lambda x: (
 	Maybe
