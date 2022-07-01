@@ -6,7 +6,7 @@ import os
 import os.path
 from functools import wraps
 
-from ._types import Maybe, EntryWrapper, InPath, PathGeneric
+from ._types import Maybe, EntryWrapper, InPath, PathGeneric, LSFilesError
 
 
 def handle_os_exceptions(
@@ -102,3 +102,30 @@ def iterativeBFS(
                         .bind(files.append)
                     )
     return files
+
+
+def inode_exists(entry: os.PathLike) -> None:
+    try:
+        os.stat(entry)
+    except FileNotFoundError as err:
+        raise LSFilesError(str(err))
+
+
+def is_leaf(
+    root: os.PathLike
+) -> bool:
+    stack: list[os.PathLike] = [root]
+    inode_exists(root)
+
+    if os.path.isfile(root):
+        return True
+
+    while stack:
+        path = stack.pop()
+        inode_exists(path)
+
+        with os.scandir(path) as dir_content:
+            for entry in dir_content:
+                if entry.is_dir(follow_symlinks=False):
+                    return False
+    return True

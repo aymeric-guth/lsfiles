@@ -4,6 +4,10 @@ import os
 import pathlib
 
 
+class LSFilesError(Exception):
+    ...
+
+
 class EntryWrapper:
     __slots__ = "entry",
 
