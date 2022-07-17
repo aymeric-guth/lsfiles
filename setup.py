@@ -35,6 +35,7 @@ setup(
     author_email="aymeric.guth@protonmail.com",
     packages=find_packages(exclude=["tests*"]),
     install_requires=[],
+    package_data={"lsfiles": ["py.typed"]},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -45,7 +46,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Operating System :: MacOS :: MacOS X",
-        'Operating System :: POSIX',
+        "Operating System :: POSIX",
     ],
     zip_safe=True,
 )
