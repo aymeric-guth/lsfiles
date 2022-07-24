@@ -288,3 +288,4 @@ pymakr.conf
 essais/
 docs/
 scripts/
+.envrc

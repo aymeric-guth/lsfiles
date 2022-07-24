@@ -9,7 +9,7 @@ def vanilla(file: os.DirEntry) -> os.DirEntry:
 
 def triplet(file: os.DirEntry) -> tuple[str, str, str]:
     (filename, ext) = os.path.splitext(file.name)
-    path = file.path[:-len(file.name)]
+    path = file.path[: -len(file.name)]
     return (path, filename, ext)
 
 
