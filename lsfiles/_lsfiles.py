@@ -18,17 +18,20 @@ def handle_os_exceptions(
             return func(*args, **kwargs)
         except (PermissionError, OSError):
             ...
+
     return inner
 
 
 def recursiveDFS(
-    filters: Union[Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]], 
-    adapter: Callable[[os.DirEntry], PathGeneric]
+    filters: Union[
+        Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]
+    ],
+    adapter: Callable[[os.DirEntry], PathGeneric],
 ) -> Callable[[os.DirEntry, Optional[int]], list[PathGeneric]]:
     files: list[PathGeneric] = []
 
     @handle_os_exceptions
-    def inner(path: os.DirEntry, depth: Optional[int]=-1) -> list[PathGeneric]:
+    def inner(path: os.DirEntry, depth: Optional[int] = -1) -> list[PathGeneric]:
         nonlocal files
 
         if not depth:
@@ -37,23 +40,21 @@ def recursiveDFS(
         with os.scandir(path) as dir_content:
             for entry in dir_content:
                 if entry.is_dir(follow_symlinks=False):
-                    inner(entry, depth-1)
+                    inner(entry, depth - 1)
                 else:
-                    (
-                        Maybe
-                        .unit(entry)
-                        .bind(filters)
-                        .bind(adapter)
-                        .bind(files.append)
-                    )
+                    (Maybe.unit(entry).bind(filters).bind(adapter).bind(files.append))
         return files
+
     return inner
+
 
 # FileNotFoundError, PermissionError, OSError
 def iterativeDFS(
-    filters: Union[Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]], 
+    filters: Union[
+        Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]
+    ],
     adapter: Callable[[os.DirEntry], PathGeneric],
-    root: os.PathLike
+    root: os.PathLike,
 ) -> list[PathGeneric]:
     stack: list[os.PathLike] = [root]
     files: list[PathGeneric] = []
@@ -67,20 +68,16 @@ def iterativeDFS(
                 if entry.is_dir(follow_symlinks=False):
                     stack.append(entry)
                 else:
-                    (
-                        Maybe
-                        .unit(entry)
-                        .bind(filters)
-                        .bind(adapter)
-                        .bind(files.append)
-                    )
+                    (Maybe.unit(entry).bind(filters).bind(adapter).bind(files.append))
     return files
 
 
 def iterativeBFS(
-    filters: Union[Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]], 
+    filters: Union[
+        Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]
+    ],
     adapter: Callable[[os.DirEntry], PathGeneric],
-    root: os.PathLike
+    root: os.PathLike,
 ) -> list[PathGeneric]:
     queue: deque[os.PathLike] = deque([root])
     files: list[PathGeneric] = []
@@ -94,13 +91,7 @@ def iterativeBFS(
                 if entry.is_dir(follow_symlinks=False):
                     queue.append(entry)
                 else:
-                    (
-                        Maybe
-                        .unit(entry)
-                        .bind(filters)
-                        .bind(adapter)
-                        .bind(files.append)
-                    )
+                    (Maybe.unit(entry).bind(filters).bind(adapter).bind(files.append))
     return files
 
 
@@ -111,9 +102,7 @@ def inode_exists(entry: os.PathLike) -> None:
         raise LSFilesError(str(err))
 
 
-def is_leaf(
-    root: os.PathLike
-) -> bool:
+def is_leaf(root: os.PathLike) -> bool:
     stack: list[os.PathLike] = [root]
     inode_exists(root)
 
@@ -129,3 +118,7 @@ def is_leaf(
                 if entry.is_dir(follow_symlinks=False):
                     return False
     return True
+
+
+def is_git_repo(root: os.PathLike) -> bool:
+    ...
