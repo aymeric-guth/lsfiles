@@ -23,3 +23,8 @@ def pathlib_path(file: os.DirEntry) -> pathlib.Path:
 
 def to_str(file: os.DirEntry) -> str:
     return file.path
+
+
+def filename(file: os.DirEntry) -> str:
+    (filename, _) = os.path.splitext(file.name)
+    return filename
