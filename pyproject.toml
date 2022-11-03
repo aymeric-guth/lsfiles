@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.pyright]
+include = ["utils"]
+defineConstant = { DEBUG = true }
+typeshedPath = "/Users/yul/Desktop/Repos/typeshed"
+venvPath = "."
+venv = ".venv"
+reportMissingImports = true
+reportMissingTypeStubs = false
+pythonVersion = "3.11"
+executionEnvironments = [{ root = "utils" }]
+
+[tool.mypy]
+python_executable = ".venv/bin/python"
+python_version = "3.11"
+follow_imports = "normal"
+pdb = true
+show_traceback = true
+raise_exceptions = true
+custom_typeshed_dir = "/Users/yul/Desktop/Repos/typeshed"
+
+[tool.pylsp-mypy]
+enabled = true
+live_mode = true
+strict = true
+
+[tool.mccabe]
+threshold = 10

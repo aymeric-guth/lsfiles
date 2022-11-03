@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import Callable, Optional, Any, Union, Generic
+from typing import Callable, Optional, Any, Union
 import os
 import os.path
 from functools import wraps
+import sys
+import pathlib
 
-from ._types import Maybe, EntryWrapper, InPath, PathGeneric, LSFilesError
+from ._types import Maybe, PathGeneric, LSFilesError
 
 
 def handle_os_exceptions(
@@ -120,5 +122,30 @@ def is_leaf(root: os.PathLike) -> bool:
     return True
 
 
-def is_git_repo(root: os.PathLike) -> bool:
-    ...
+def _main(cwd: pathlib.PurePath) -> int:
+    def l(file):
+        p = pathlib.Path(file)
+        return p.suffix, str(p.stat().st_size)
+
+    ext: list[str] = list(
+        f
+        for f in iterativeDFS(
+            lambda f: f,
+            l,
+            cwd,
+        )
+    )
+    with open(cwd / "res.txt", "w") as f:
+        for e, s in ext:
+            # print(f"ext={e}, size={s}")
+            f.write(f"{e},{s}\n")
+    # sys.stdout.write("\n".join(ext))
+    return 0
+
+
+def main() -> int:
+    cwd = pathlib.PurePath(os.getcwd())
+    print(f"{cwd=}")
+    if len(sys.argv) != 2 or sys.argv[1] != "ext":
+        return 1
+    sys.exit(_main(cwd))
