@@ -149,3 +149,11 @@ def main() -> int:
     if len(sys.argv) != 2 or sys.argv[1] != "ext":
         return 1
     sys.exit(_main(cwd))
+
+
+# files = lsfiles(
+#     f_regex(r'.png') | f_predicate
+#     | f_dotfiles
+#     | f_ext()
+#     | f_name('')
+# )(root)

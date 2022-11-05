@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.pyright]
-include = ["utils"]
+include = ["lsfiles"]
 defineConstant = { DEBUG = true }
 typeshedPath = "/Users/yul/Desktop/Repos/typeshed"
 venvPath = "."
@@ -11,7 +11,7 @@ venv = ".venv"
 reportMissingImports = true
 reportMissingTypeStubs = false
 pythonVersion = "3.11"
-executionEnvironments = [{ root = "utils" }]
+executionEnvironments = [{ root = "lsfiles" }]
 
 [tool.mypy]
 python_executable = ".venv/bin/python"
@@ -29,3 +29,27 @@ strict = true
 
 [tool.mccabe]
 threshold = 10
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.pytest_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''

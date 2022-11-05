@@ -2,3 +2,4 @@ setuptools
 build
 virtualenv
 git+https://git.ars-virtualis.org/yul/utils@master
+ipython
