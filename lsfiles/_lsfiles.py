@@ -125,7 +125,7 @@ def is_leaf(root: os.PathLike) -> bool:
 def _main(cwd: pathlib.PurePath) -> int:
     def l(file):
         p = pathlib.Path(file)
-        return p.suffix, str(p.stat().st_size)
+        return p.suffix, p.stat().st_size
 
     ext: list[str] = list(
         f
@@ -135,11 +135,41 @@ def _main(cwd: pathlib.PurePath) -> int:
             cwd,
         )
     )
-    with open(cwd / "res.txt", "w") as f:
-        for e, s in ext:
-            # print(f"ext={e}, size={s}")
-            f.write(f"{e},{s}\n")
-    # sys.stdout.write("\n".join(ext))
+    from collections import defaultdict
+    from rich.console import Console
+    from rich.table import Table
+
+    table = Table(title="Size allocation per extension")
+
+    table.add_column("extension", justify="left", style="cyan", no_wrap=True)
+    table.add_column("size (bytes)", justify="left", style="magenta")
+
+    res = defaultdict(int)
+    import math
+
+    def convert_size(size_bytes):
+        if size_bytes == 0:
+            return "0B"
+        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        p = math.pow(1024, i)
+        s = round(size_bytes / p, 2)
+        return "%s %s" % (s, size_name[i])
+
+    for e, s in ext:
+        res[e] += int(s)
+    if sys.stdout.isatty():
+        [
+            table.add_row(k, convert_size(v))
+            for k, v in sorted(
+                [(k, v) for k, v in res.items()], key=lambda item: item[1], reverse=True
+            )
+        ]
+        console = Console()
+        console.print(table)
+    else:
+        sys.stdout.write("\n".join([f"{k} {v}" for k, v in res.items()]))
+
     return 0
 
 
