@@ -11,7 +11,7 @@ clean() {
 build() {
   python_clean || return 1
   python_build || return 1
-  python_deploy || return 1
+  python_deploy_venv || return 1
 }
 
 gen() {
@@ -20,7 +20,7 @@ gen() {
 }
 
 run() {
-  lsf ext
+  lsf ext py
 }
 
 up() {
