@@ -8,12 +8,12 @@ from functools import wraps
 import sys
 import pathlib
 
-from ._types import Maybe, PathGeneric, LSFilesError
+from ._types import Maybe, LSFilesError
 
 
 def handle_os_exceptions(
-    func: Callable[[os.DirEntry, Optional[int]], list[PathGeneric]]
-) -> Callable[[os.DirEntry, Optional[int]], list[PathGeneric]]:
+    func: Callable[[os.DirEntry, int], list[Any]]
+) -> Callable[[os.DirEntry, int], list[Any]]:
     @wraps(func)
     def inner(*args, **kwargs) -> Any:
         try:
@@ -28,15 +28,15 @@ def recursiveDFS(
     filters: Union[
         Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]
     ],
-    adapter: Callable[[os.DirEntry], PathGeneric],
-) -> Callable[[os.DirEntry, Optional[int]], list[PathGeneric]]:
-    files: list[PathGeneric] = []
+    adapter: Callable[[os.DirEntry], Any],
+) -> Callable[[os.DirEntry, int], list[Any]]:
+    files: list[Any] = []
 
     @handle_os_exceptions
-    def inner(path: os.DirEntry, depth: Optional[int] = -1) -> list[PathGeneric]:
+    def inner(path: os.DirEntry, depth: int = -1) -> list[Any]:
         nonlocal files
 
-        if not depth:
+        if depth == 0:
             return files
 
         with os.scandir(path) as dir_content:
@@ -57,9 +57,9 @@ def iterativeDFS(
     ],
     adapter: Callable[[os.DirEntry], Any],
     root: os.PathLike,
-) -> list[PathGeneric]:
+) -> list[Any]:
     stack: list[os.PathLike] = [root]
-    files: list[PathGeneric] = []
+    files: list[Any] = []
 
     while stack:
         path = stack.pop()
@@ -78,11 +78,11 @@ def iterativeBFS(
     filters: Union[
         Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]
     ],
-    adapter: Callable[[os.DirEntry], PathGeneric],
+    adapter: Callable[[os.DirEntry], Any],
     root: os.PathLike,
-) -> list[PathGeneric]:
+) -> list[Any]:
     queue: deque[os.PathLike] = deque([root])
-    files: list[PathGeneric] = []
+    files: list[Any] = []
 
     while queue:
         path = queue.popleft()
