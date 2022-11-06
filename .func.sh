@@ -5,6 +5,7 @@
 clean() {
   # python_project_clean || return 1
   python_clean || return 1
+  rm -rf .pytest_cache || return 1
 }
 
 build() {

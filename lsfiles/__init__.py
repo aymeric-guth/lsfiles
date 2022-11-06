@@ -3,7 +3,7 @@ from . import filters
 from . import adapters
 from ._types import Maybe, LSFilesError, InPath, PathGeneric
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 __all__ = [
     "iterativeBFS",
