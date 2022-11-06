@@ -233,5 +233,12 @@ class Wrapper:
 
 InPath = Union[pathlib.Path, pathlib.PurePath, os.DirEntry, str, None]
 PathGeneric = Union[
-    pathlib.Path, pathlib.PurePath, os.DirEntry, str, tuple[str, str, str]
+    pathlib.PosixPath,
+    pathlib.WindowsPath,
+    pathlib.Path,
+    pathlib.PurePath,
+    os.DirEntry,
+    os.PathLike,
+    str,
+    tuple[str, str, str],
 ]

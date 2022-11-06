@@ -55,7 +55,7 @@ def iterativeDFS(
     filters: Union[
         Callable[[os.DirEntry], Maybe], Callable[[os.DirEntry], Optional[os.DirEntry]]
     ],
-    adapter: Callable[[os.DirEntry], PathGeneric],
+    adapter: Callable[[os.DirEntry], Any],
     root: os.PathLike,
 ) -> list[PathGeneric]:
     stack: list[os.PathLike] = [root]
