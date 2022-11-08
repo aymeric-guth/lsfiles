@@ -66,7 +66,8 @@ def iterativeDFS(
         with os.scandir(path) as dir_content:
             for entry in dir_content:
                 if entry.is_dir(follow_symlinks=False):
-                    stack.append(entry)
+                    if entry.name[0] != ".":
+                        stack.append(entry)
                 else:
                     (Maybe.unit(entry).bind(filters).bind(adapter).bind(files.append))
     return files
@@ -89,7 +90,8 @@ def iterativeBFS(
         with os.scandir(path) as dir_content:
             for entry in dir_content:
                 if entry.is_dir(follow_symlinks=False):
-                    queue.append(entry)
+                    if entry.name[0] != ".":
+                        queue.append(entry)
                 else:
                     (Maybe.unit(entry).bind(filters).bind(adapter).bind(files.append))
     return files
