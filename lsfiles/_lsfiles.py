@@ -40,7 +40,8 @@ def recursiveDFS(
         with os.scandir(path) as dir_content:
             for entry in dir_content:
                 if entry.is_dir(follow_symlinks=False):
-                    inner(entry, depth - 1)
+                    if entry.name[0] != ".":
+                        inner(entry, depth - 1)
                 else:
                     (Maybe.unit(entry).bind(filters).bind(adapter).bind(files.append))
         return files
