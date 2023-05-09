@@ -117,6 +117,11 @@ def files_finder(pwd: str) -> tuple[str, int]:
     return cli.success("\n".join(files))
 
 
+def file_density(pwd: str) -> tuple[str, int]:
+    cwd: pathlib.PurePath = pathlib.PurePath(pwd)
+    raise NotImplementedError
+
+
 def _main() -> int:
     match sys.argv[1:]:
         case []:
@@ -127,5 +132,7 @@ def _main() -> int:
             return cli.sh_fnc(ext_finder)(os.getcwd(), *args)
         case ["dir"]:
             return cli.sh_fnc(dir_finder)(os.getcwd())
+        case ["files"]:
+            return cli.sh_fnc(file_density)(os.getcwd())
         case _:
             return cli.sh_fnc(cli.failure)(f"{main.__doc__}")
