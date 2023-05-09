@@ -289,3 +289,5 @@ essais/
 docs/
 scripts/
 .envrc
+.tmuxp.yaml
+.func.sh
